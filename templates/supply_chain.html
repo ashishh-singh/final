@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title >Mission One Million</title>
+
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/supply_style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+</head>
+<body id="main_div">
+
+    <div class="row shadow " id="nav_box" style=" background-color: white; width: 100% !important; margin: 0 !important; padding: 0 !important;">
+        <div class="column c_1 border_box " style="margin-top: 0 !important; padding-top: 0 !important;" >
+            <div class="container ">
+              
+                <div class="row  border_box">
+                  <div class=" c_1 col-md-5 pads  border_box">
+                    <img  id="c_1_image" class="" src="../static/pictures/logo.png" alt="logo">
+                  </div>
+                  <div style="margin-left: -10px !important;" class=" col-md-4    border_box">
+               
+                  </div>
+
+                </div>
+              </div>
+        </div>
+        <div class="column c_2 border_box" >
+
+          <p style="" class="" id="tool_heading">Supply Chain Stucture</p>
+          
+          <div class="float-right " id="btn_div" >
+
+            <!-- <button  id="display_col_table" style="color: white ;" value="Yes" class="btn btn-warning  text_shadow"  ><b>View Full Table</b></button> -->
+
+            <button  id="display_curr_table" style="color: white;" value="Yes" class="btn btn-info  text_shadow" onclick="ShowHideDiv1(this)" ><b>Change Output Currency</b></button>
+
+            <!-- <button  id="edit_inputs" style="color: white ;" value="Yes" class="btn btn-warning  text_shadow" onclick="ShowHideDiv(this)" ><b>Edit Input(s)</b></button> -->
+            <button  id="download_pdf" style="color: white ;"  class="btn btn-danger text_shadow" onclick="window.print()" ><b>Download PDF</b></button>
+            <!-- <a href="" class="btn btn-success text_shadow" ><b>Download Excelsheet</b></a> -->
+            <a href="/" class="btn btn-info " ><i class="fas fa-home text_shadow" style="size: 3x; padding: 0 !important"></i></a>
+
+
+          </div>
+          
+        </div>
+        <!-- error display box -->
+        <div class="flash_mess margin_all  " >
+          <div class="flash_mess_inner_div">
+              {% with messages = get_flashed_messages()  %}
+                 {% if messages %}
+                    <ul class=flashes>
+      
+                       {% for message in messages %}
+                          <li>{{ message }}</li>
+                       {% endfor %}
+      
+                    </ul>
+                 {% endif %}
+              {% endwith %}
+          </div>
+    
+        </div>
+    </div>
+ 
+    <br>
+
+    <!-- currency exchange box -->
+    <div id="curr_ex_div" class="currency_exchange_box shadow">
+        
+        <div class="">
+            <label style = "font-size: large; font-weight: 500;" for="c_currency1">Currency&nbsp;&nbsp;</label>
+            <select   class="form-select " style="width: 68%;" name="c_currency1" id="c_currency1" aria-label="Default select example" onchange="symbol_display()" >
+                {% if inputs_other[1] == '$' %}
+                <option value="AED">AED</option>
+                <option value="₹">INR</option>
+                <option value="$" selected>USD</option>
+              {% endif %}
+              {% if inputs_other[1] == 'AED' %}
+                <option value="AED" selected>AED</option>
+                <option value="₹">INR</option>
+                <option value="$" >USD</option>
+              {% endif %}
+
+              {% if inputs_other[1] == '₹' %}
+                <option value="AED">AED</option>
+                <option value="₹"selected>INR</option>
+                <option value="$" >USD</option>
+              {% endif %}
+            </select>
+
+
+            <label class="sr-only" for="target_currency_symbol1">Currency Exchange</label><br>
+            <div class="input-group">
+
+              <input type="text" style="width: 10% !important; font-weight: bold !important;" class="form-control bold" id="target_currency_symbol1" value="1 {{ inputs_other[1] }}  = " disabled>
+              <!-- <input type="text" style="text-align: center !important;" class="form-control bold" id="" value="=" disabled> -->
+
+              <div class="input-group-prepend">
+                <div class="input-group-text " ><span id="input_symbol" class="bold">{{ inputs_other[1]  }}</span></div>
+              </div>
+              <input type="text" class="form-control" style="width: 30% !important;" name="currency_exchange1" id="currency_exchange1" placeholder="" value="1" required>
+            </div>
+            <br>
+            <button style="text-align: center !important; float: right;" onclick="send_value_to_main()" class="btn btn-primary bold"><b>Change</b></button>
+
+        </div>
+     
+
+    
+    </div>
+    <!-- input form  -->
+    <div  style="width: 93% !important; margin: auto !important; " class=" p-3 mb-5 bg-white rounded margin" id="form_003">
+        <form action="/supply_chain" method="POST">
+
+              <div id="form_upper_inputs">
+                  <div class="form-row bold" style="text-align: center !important;">
+                    <!-- target Customers -->
+                    <div class="form-group col-md-2">
+                          <label for="target_customer">Target Customers</label>
+                          <input type="text" class="form-control input_onchange" name="target_customer" id="target_customer" value="{{ inputs_other[0] }}" onchange="customer_value()" placeholder="e.g. - 10000" required>
+                    </div>
+                    <!-- Currency -->
+                    <div class="form-group col-md-1">
+                          <label for="supply_currency">Currency</label><br>
+                          <select   class="form-select select_options" style="width: 100% !important;" name="supply_currency" id="supply_currency" aria-label="Default select example" onchange="customer_symbol()" >
+                            {% if inputs_other[1] == '$' %}
+                            <option value="AED">AED</option>
+                            <option value="₹">INR</option>
+                            <option value="$" selected>USD</option>
+                          {% endif %}
+                          {% if inputs_other[1] == 'AED' %}
+                            <option value="AED" selected>AED</option>
+                            <option value="₹">INR</option>
+                            <option value="$" >USD</option>
+                          {% endif %}
+          
+                          {% if inputs_other[1] == '₹' %}
+                            <option value="AED">AED</option>
+                            <option value="₹"selected>INR</option>
+                            <option value="$" >USD</option>
+                          {% endif %}
+                          </select>
+
+                    </div>
+                    <!-- mrp -->
+                    <div class="form-group col-md-3">
+                        <label for="mrp">MRP(<span id="mrp_symbol" class="bold">{{inputs_other[1]}}</span>)</label>
+                        <input type="text" class="form-control input_onchange" name="mrp" id="mrp" value="{{ '{:.2f}'.format(inputs_other[2])  }}" placeholder="e.g. - 1750" required>
+                    </div>
+                    <!-- cost price -->
+                    <div class="form-group col-md-2">
+                        <label for="cost_price">Cost price</label>
+                        <input type="text" class="form-control" name="cost_price" id="cost_price" value="{{ '{:.2f}'.format(df['sp'][0])  }}" placeholder="e.g. - 630" >
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="invest_amt">Investment Amount</label>
+                      <input type="text" class="form-control input_onchange" name="invest_amt" id="invest_amt" value="{{ '{:.2f}'.format(inputs_other[3])  }}" placeholder="e.g. - 1750" required>
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="invest_per">Investment %</label>
+                      <input type="text" class="form-control input_onchange" name="invest_per" id="invest_per" value="{{ '{:.2f}'.format(inputs_other[4])  }}" placeholder="e.g. - 1750" required>
+                    </div>
+
+                  </div>
+                  <button id="input_generate_btn" style ="float: right !important; display: none;" class="btn btn-primary bold" onclick="">Generate Table</button>
+
+                  <div class="form-row bold"  style="text-align: center !important; display: none; ">
+
+                      <div class="form-group col-md-3">
+                              <label for="supply_curr_exchange">Exchange Amount</label>
+                              <input type="text" class="form-control" name="supply_curr_exchange" id="supply_curr_exchange" value="1" onchange="" placeholder="e.g. - 10000" required>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <select   class="form-select select_options" style="width: 100% !important;" name="supply_currency1" id="supply_currency1" aria-label="Default select example" onchange="" >
+
+                          <option value="AED" selected>AED</option>
+                          <option value="₹">INR</option>
+                          <option value="$" >USD</option>
+                  
+                        </select>
+
+
+                      </div>
+                      <div class="form-group col-md-3">
+                      </div>
+                      <div class="form-group col-md-3">
+                    </div>
+
+                  </div>
+              </div>
+              
+
+      
+              <table class="table table-bordered bold shadow "  id="table_div_pr1"> 
+                <thead class="thead-dark border_box table_styl_cust" style="text-align: center !important;">
+                  <tr id="th_1st_row" >
+                    <th colspan="2" class="dr">Input(s)</th>
+                    <th class="border-0 "></th>
+                    <th class="border-0 "></th>
+                    <th class="border-0 "></th>
+                    
+                    <th colspan="2" class="mr">Output(s)</th>
+                    <th class="border-0 "></th>
+                    <th class="border-0 "></th>
+                    <th class="border-0 "></th>
+                    <th class="border-0 "></th>
+               
+                  </tr>
+                  <tr>
+                    <th class="dr  " style="width: 1% !important;">#</th>
+                    <th class="dr">Level</th>
+                    <th class="dr">Number</th>
+                    <th class="dr">Margin %</th>
+                    <th class="dr">Direct Cost <br> ({{inputs_other[1]}})</th>     
+                    <th class = "mr">Supply Chain <br> Customer(s)</th>
+                    <th class="mr" title="margin per customer">Margin/ <br>Customer <br>({{inputs_other[-1]}})</th>
+                    <th class="mr">Cost Price <br> ({{inputs_other[-1]}})</th>    
+                    <th class="mr">Total Margin <br> ({{inputs_other[-1]}})</th>
+                    <th class = "mr ">Net income <br> ({{inputs_other[-1]}}) </th>
+                    <th class="mr">Investment <br> ({{inputs_other[-1]}})</th>
+                  </tr>
+                </thead>
+                <tbody>
+                      <tr>
+                          <td style="width: 1% !important;">1.</td>
+                          <td scope="col" class=""><input type="text" class="form-control  bold float_left" name="level_name1" id="level_name1" value="{{ inputs_list[0][0] }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="number1" id="number1" value="{{ inputs_list[0][1] }}" placeholder="" required></td>
+                          <td scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage1" id="margin_percentage1" value="{{ '{:.2f}'.format(inputs_list[0][3])  }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost1" id="direct_cost1" value="{{ '{:.2f}'.format(inputs_list[0][4])  }}" placeholder="" required></td>
+                          <td class = "mr" style="color: white;" scope="col"><span class="float_right">{{ "{:,}".format(df['supply_Chain_Customers'][0])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['cost'][0])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['sp'][0])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['Total_margin'][0])  }}</span></td>
+                          <td class=" mr" scope="col"><span class="float_right">{{ "{:,}".format(df['Net income'][0])  }}</span></td>
+                          <td class="" scope="col"><span class="float_right">{{ "{:,}".format(df['investment'][0])  }}</span></td>
+
+                      </tr>
+                      <tr>
+                          <td style="width: 1% !important;">2.</td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name2" id="level_name2" value="{{ inputs_list[1][0] }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="number2" id="number2" value="{{ inputs_list[1][1] }}" placeholder="" required></td>
+                          <td scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage2" id="margin_percentage2" value="{{ '{:.2f}'.format(inputs_list[1][3])  }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost2" id="direct_cost2" value="{{ '{:.2f}'.format(inputs_list[1][4])  }}" placeholder="" required></td>
+                          <td class = "mr" style="color: white;" scope="col"><span class="float_right">{{ "{:,}".format(df['supply_Chain_Customers'][1])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['cost'][1])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['sp'][1])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['Total_margin'][1])  }}</span></td>
+                          <td class=" mr" scope="col"><span class="float_right">{{ "{:,}".format(df['Net income'][1])  }}</span></td>
+                          <td class="" scope="col"><span class="float_right">{{ "{:,}".format(df['investment'][1])  }}</span></td>
+
+
+                        </tr>
+                      <tr>
+                          <td style="width: 1% !important;">3.</td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name3" id="level_name3" value="{{ inputs_list[2][0] }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="number3" id="number3" value="{{ inputs_list[2][1] }}" placeholder="" required></td>
+                          <td scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage3" id="margin_percentage3" value="{{ '{:.2f}'.format(inputs_list[2][3])  }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost3" id="direct_cos3" value="{{ '{:.2f}'.format(inputs_list[2][4])  }}" placeholder="" required></td>
+                          <td class = "mr" style="color: white;" scope="col"><span class="float_right">{{ "{:,}".format(df['supply_Chain_Customers'][2])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['cost'][2])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['sp'][2])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['Total_margin'][2])  }}</span></td>
+                          <td class=" mr" scope="col"><span class="float_right">{{ "{:,}".format(df['Net income'][2])  }}</span></td>
+                          <td class="" scope="col"><span class="float_right">{{ "{:,}".format(df['investment'][2])  }}</span></td>
+
+                        </tr>
+                      <tr>
+                          <td style="width: 1% !important;">4.</td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name4" id="level_name4" value="{{ inputs_list[3][0] }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="number4" id="number4" value="{{ inputs_list[3][1] }}" placeholder="" required></td>
+                          <td scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage4" id="margin_percentage4" value="{{ '{:.2f}'.format(inputs_list[3][3])  }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost4" id="direct_cost4" value="{{ '{:.2f}'.format(inputs_list[3][4])  }}"placeholder="" required></td>
+                          <td class = "mr" style="color: white;" scope="col"><span class="float_right">{{ "{:,}".format(df['supply_Chain_Customers'][3])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['cost'][3])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['sp'][3])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['Total_margin'][3])  }}</span></td>
+                          <td class=" mr" scope="col"><span class="float_right">{{ "{:,}".format(df['Net income'][3])  }}</span></td>
+                          <td class="" scope="col"><span class="float_right">{{ "{:,}".format(df['investment'][3])  }}</span></td>
+
+                        </tr>
+                      <tr>
+                          <td style="width: 1% !important;">5.</td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name5" id="level_name5" value="{{ inputs_list[4][0] }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="number5" id="number5" value="{{ inputs_list[4][1] }}" placeholder="" required></td>
+                          <td scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage5" id="margin_percentage5" value="{{ '{:.2f}'.format(inputs_list[4][3])  }}" placeholder="" required></td>
+                          <td scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost5" id="direct_cost5" value="{{ '{:.2f}'.format(inputs_list[4][4])  }}" placeholder="" required></td>
+                          <td class = "mr" style="color: white;" scope="col"><span class="float_right">{{ "{:,}".format(df['supply_Chain_Customers'][4])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['cost'][4])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['sp'][4])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['Total_margin'][4])  }}</span></td>
+                          <td class=" mr" scope="col"><span class="float_right">{{ "{:,}".format(df['Net income'][4])  }}</span></td>
+                          <td class="" scope="col"><span class="float_right">{{ "{:,}".format(df['investment'][4])  }}</span></td>
+
+                        </tr>
+                      <tr>
+                          <td style="width: 1% !important;">6.</td>
+                          <td scope="col" style="width: 15% !important;" class=""><input type="text" class="form-control bold float_left" name="level_name6" id="level_name6" value="{{ inputs_list[5][0] }}" placeholder="" required>
+                          <td scope="col" style="width: 10% !important;" class=""><input type="text" class="form-control bold float_right" name="number6" id="number6" value="{{ inputs_list[5][1] }}" placeholder="" required></td>
+                          <td scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage6" id="margin_percentage6" value="{{ '{:.2f}'.format(inputs_list[5][3])  }}" placeholder="" required></td>
+                          <td scope="col" style="width: 10% !important;" class=""><input type="text" class="form-control bold float_right" name="direct_cost6" id="direct_cost6" value="{{ '{:.2f}'.format(inputs_list[5][4])  }}" placeholder="" required></td>
+                          <td class = "mr" style="color: white;" scope="col"><span class="float_right">{{ "{:,}".format(df['supply_Chain_Customers'][5])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['cost'][5])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['sp'][5])  }}</span></td>
+                          <td scope="col"><span class="float_right">{{ "{:,}".format(df['Total_margin'][5])  }}</span></td>
+                          <td class=" mr" scope="col"><span class="float_right">{{ "{:,}".format(df['Net income'][5])  }}</span></td>
+                          <td class="" scope="col"><span class="float_right">{{ "{:,}".format(df['investment'][5])  }}</span></td>
+
+                      </tr>
+                </tbody>
+              </table>
+
+
+
+        </form>
+  </div>
+
+
+
+   
+    <script src="{{url_for('static', filename='javascript/supply_js.js')}}"></script>
+
+</body>
+</html>

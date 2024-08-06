@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title >Mission One Million</title>
+
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/container_style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+</head>
+<body>
+
+    <div class="row shadow " id="nav_box" style="z-index: 5; position: fixed !important; background-color: white;">
+        <div class="column c_1 border_box " style="margin-top: 0 !important; padding-top: 0 !important;" >
+            <div class="container ">
+              
+                <div class="row  border_box">
+                  <div class=" c_1 col-md-5 pads  border_box">
+                    <img  id="c_1_image" class="" src="../static/pictures/logo.png" alt="logo">
+                  </div>
+                  <div style="margin-left: -10px !important;" class=" col-md-4    border_box">
+               
+                  </div>
+
+                </div>
+              </div>
+        </div>
+        <div class="column c_2 border_box" >
+
+          <p style="z-index: 50 !important;" class="" id="tool_heading">Ship Container Capacity</p>
+          
+          <div class="float-right " >
+
+            <button  id="display_curr_table" style="color: white ;" value="Yes" class="btn btn-success  text_shadow" onclick="ShowHideDiv1(this)" ><b>Change Currency</b></button>
+
+            <!-- <button  id="edit_inputs" style="color: white ;" value="Yes" class="btn btn-warning  text_shadow" onclick="ShowHideDiv(this)" ><b>Edit Input(s)</b></button> -->
+            <button  id="download_pdf" style="color: white ;"  class="btn btn-danger text_shadow" onclick="window.print()" ><b>Download PDF</b></button>
+            <!-- <a href="" class="btn btn-success text_shadow" ><b>Download Excelsheet</b></a> -->
+            <a href="/" class="btn btn-info " ><i class="fas fa-home text_shadow" style="size: 3x; padding: 0 !important"></i></a>
+
+
+            
+
+          </div>
+          
+        </div>
+        <div class="flash_mess margin_all  " >
+          <div class="flash_mess_inner_div">
+              {% with messages = get_flashed_messages()  %}
+                 {% if messages %}
+                    <ul class=flashes>
+      
+                       {% for message in messages %}
+                          <li>{{ message }}</li>
+                       {% endfor %}
+      
+                    </ul>
+                 {% endif %}
+              {% endwith %}
+          </div>
+    
+        </div>
+    </div>
+ 
+    
+    <br>
+
+
+    <div id="curr_ex_div" class="currency_exchange_box shadow">
+        
+        <div class="">
+            <label style = "font-size: large; font-weight: 500;" for="c_currency1">Currency&nbsp;&nbsp;</label>
+            <select   class="form-select " style="width: 68%;" name="c_currency1" id="c_currency1" aria-label="Default select example" onchange="symbol_display()" >
+                  <option value="INR" selected>INR&nbsp;&nbsp;</option>
+                  <option value="AED">AED&nbsp;&nbsp;</option>
+                  <option value="USD" >USD&nbsp;&nbsp;</option>
+            </select>
+
+
+            <label class="sr-only" for="target_currency_symbol1">Currency Exchange</label><br>
+            <div class="input-group">
+
+              <input type="text" style="width: 10% !important;" class="form-control bold" id="target_currency_symbol1" value="1 INR  = " disabled>
+              <!-- <input type="text" style="text-align: center !important;" class="form-control bold" id="" value="=" disabled> -->
+
+              <div class="input-group-prepend">
+                <div class="input-group-text "><b>₹</b></div>
+              </div>
+              <input type="text" class="form-control" style="width: 30% !important;" name="currency_exchange1" id="currency_exchange1" placeholder="" value="1" required>
+            </div>
+        </div>
+        <br>
+
+        <button style="text-align: center !important; float: right;" onclick="send_value_to_main()" class="btn btn-primary bold"><b>Change</b></button>
+    
+    </div>
+
+
+    <div class="row d-flex justify-content-center"style="margin-top: 90px !important">
+        <div class="column form_colum  " style="height: 100%;" >
+          <div class="table_div shadow"  >
+              <table class="table table-bordered bold shadow " id="table_div_pr"> 
+                <thead class="thead-dark border_box">
+                  <tr>
+                    <th>Summary</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr >
+                    <th scope="col">Container Size</th>
+                    <th class="dr" scope="col">{{inputs[0]}}ft</th>
+                    <th scope="col">Total Carton</th>
+                    <th class="dr" scope="col">{{ extra[0] }}</th>
+                
+                    
+                
+                  </tr>
+                  <tr>
+                    <td>Recommended Carton L</td>
+                    <td class="dr">{{ "{:,.2f}".format(extra[-1][0])  }} inch</td>
+                    <td>Recommended Carton  W</td>
+                    <td class="dr">{{ "{:,.2f}".format(extra[-1][1])  }} inch</td>
+                  </tr>
+                  <tr>
+                    <td>Recommended Carton H</td>
+                    <td class="dr">{{ "{:,.2f}".format(extra[-1][2])  }} inch</td>
+                    <td>Carton Volume</td>
+                    <td class="dr">{{ "{:,.2f}".format(extra[-1][0]* extra[-1][1]* extra[-1][2])  }} in³</td>
+                  </tr>
+
+                  <tr>
+                    <td scope="col">Ex. Factory Price (total) </td>
+                    <td class="mr" scope="col">{{ "{} {:,.2f}".format(inputs[6],extra[3][0]) }}</td>
+                    <td scope="col">Consumer Price (total) </td>
+                    <td class="mr" scope="col">{{ "{} {:,.2f}".format(inputs[6],extra[2][0])  }}</td>
+          
+                  </tr>
+                  <tr>
+                    <td scope="col">Ex. Factory Price (per carton) </td>
+                    <td class="mr" scope="col">{{ "{} {:,.2f}".format(inputs[6],extra[3][1])  }}</td>
+                    <td scope="col">Consumer Price (per carton) </td>
+                    <td class="mr" scope="col">{{ "{} {:,.2f}".format(inputs[6],extra[2][1])  }}</td>
+
+                  </tr>
+                  <tr>
+                    <td scope="col">Ex. Factory Price (per item) </td>
+                    <td class="mr" scope="col">{{ "{} {:,.2f}".format(inputs[6],extra[3][2])  }}</td>
+                    <td scope="col">Consumer Price (per item) </td>
+                    <td class="mr" scope="col">{{ "{} {:,.2f}".format(inputs[6],extra[2][2])  }}</td>
+ 
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table table-bordered bold shadow tb_01" id="shipCost">
+                <tbody>
+    
+              
+                </tbody>
+                <thead class="thead-dark border_box">
+                  <tr class="">
+                    <th scope="col">Details</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Per Carton</th>
+                    <th scope="col">Per Item</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {% for i in range(0, final_list|length) %}
+                  <tr class="row_color">
+                    <td>{{ final_list[i][3] }}</td>
+                    <td scope="row">{{ "{} {:,.2f}".format(inputs[6],final_list[i][0])  }}</td>
+                    <td>{{ "{} {:,.2f}".format(inputs[6],final_list[i][1])  }}</td>
+                    <td>{{ "{} {:,.2f}".format(inputs[6],final_list[i][2])  }}</td>
+                    
+                  </tr>
+                  {% endfor %}
+              
+                </tbody>
+              </table>
+          </div>
+          
+  
+
+        </div>
+        <div class="column form_column1" style=" " id="div_form_002">
+
+            <div class="shadow p-3 mb-5 bg-white rounded " id="form_002">
+                <form action="/container" method="POST">
+        
+                  <p style="font-size: larger; font-weight: 500;">Container Size</p>
+        
+        
+                    <div class="form-row">
+          
+                        <div class="form-group col-md-4" style="">
+          
+                          <label style=""  for="container_size">Container Size&nbsp;</label><br>
+                          <select style="" class="form-select  select_options input_onchange" name="container_size" id="container_size" aria-label="Default select example" onchange="volume()" >
+                            {% if inputs[0] == 20 %}
+                              <option selected value="20">20ft&nbsp;&nbsp; </option>
+                              <option value="40">40ft&nbsp;&nbsp;  </option>
+                            {% endif %}
+                            {% if inputs[0] == 40 %}
+                            <option value="20">20ft&nbsp;&nbsp; </option>
+                            <option selected value="40">40ft&nbsp;&nbsp;  </option>
+                          {% endif %}
+
+                          </select>
+          
+                        </div>
+                   
+                        <div class="form-group col-md-4" style="">
+                            <label for="volume_cartoon">Container Volume (in³)</label>
+                            <input type="text" class="form-control" id="volume_cartoon"  name="volume_cartoon" value=" 23,50,080" placeholder="e.g. - 5,10" disabled>
+                        </div>
+                        <div class="form-group col-md-4" style=""></div>
+                    </div>
+                    <hr>
+                    <p style="font-size: larger; font-weight: 500;">Carton Size</p>
+
+                    <div class="form-row">
+        
+        
+                      <div class="form-group col-md-4">
+        
+                        <label   for="dimension_unit">Carton Unit</label><br>
+                        <select style="" class="form-select select_options " name="dimension_unit" id="dimension_unit" aria-label="Default select example">
+
+                          {% if inputs[1] == 'ft' %}
+                          <option selected value="ft">Foot&nbsp;&nbsp;</option>
+                          <option  value="inch">Inches&nbsp;&nbsp;</option>
+                          <option value="mtr">Meter&nbsp;&nbsp;</option>
+                          {% endif %}
+                          {% if inputs[1] == 'inch' %}
+                          <option  value="ft">Foot&nbsp;&nbsp;</option>
+                          <option selected value="inch">Inches&nbsp;&nbsp;</option>
+                          <option value="mtr">Meter&nbsp;&nbsp;</option>
+                          {% endif %}
+                          {% if inputs[1] == 'mtr' %}
+                          <option  value="ft">Foot&nbsp;&nbsp;</option>
+                          <option  value="inch">Inches&nbsp;&nbsp;</option>
+                          <option selected value="mtr">Meter&nbsp;&nbsp;</option>
+                          {% endif %}
+            
+                        </select>
+        
+                      </div>
+        
+                      <div class="form-group col-md-4">
+        
+                        <label for="item_cartoon">Items per Carton</label>
+                        <input type="text" class="form-control" id="item_cartoon"  name="item_cartoon" value="{{ inputs[2] }}" placeholder="e.g. - 5,10" required>
+        
+                    </div>
+                  </div>
+        
+                  <div class="form-row">
+        
+                    <div class="form-group col-md-4">
+                      <label for="length_cartoon">Carton Length</label>
+                      <input type="text" class="form-control" name="length_cartoon" id="length_cartoon" value="{{ '{:.2f}'.format(inputs[3])  }}" placeholder="e.g. - 1, 0.5" required>
+                    </div>
+        
+                    <div class="form-group col-md-4">
+                      <label for="width_cartoon">Carton Width </label>
+                      <input type="text" class="form-control" name="width_cartoon" id="width_cartoon" value="{{ '{:.2f}'.format(inputs[4])  }}"  placeholder="e.g. - 1, 0.5" required>
+                    </div>
+        
+                    <div class="form-group col-md-4">
+                      <label for="height_cartoon">Carton Height</label>
+                      <input type="text" class="form-control" name="height_cartoon" id="height_cartoon" value="{{ '{:.2f}'.format(inputs[5])  }}" placeholder="e.g. - 1, 0.5" required>
+                    </div>
+        
+        
+                  </div>
+   
+        
+                  <div class="form-row" style=" display: none;">
+        
+                    <div class="form-group col-md-4">
+                        <label for="c_currency">Currency</label><br>
+                        <select   class="form-select select_options" name="c_currency" id="c_currency" aria-label="Default select example" onchange="symbol_display()" >
+                              <option value="₹" selected>INR&nbsp;&nbsp;</option>
+                              <option value="AED">AED&nbsp;&nbsp;</option>
+                              <option value="$" >USD&nbsp;&nbsp;</option>
+                        </select>
+        
+                    </div>
+        
+                    <div class="col-md-2"></div>
+        
+        
+                    <div class="col-md-6">
+        
+                      <label class="" for="currency_exchange">Currency Exchange</label><br>
+                      <div class="input-group">
+        
+                        <input type="text" style="width: 10% !important;" class="form-control bold" id="target_currency_symbol" value="1 INR  = " disabled>
+                        <!-- <input type="text" style="text-align: center !important;" class="form-control bold" id="" value="=" disabled> -->
+        
+                        <div class="input-group-prepend">
+                          <div class="input-group-text "><b>₹</b></div>
+                        </div>
+                        <input type="text" class="form-control" style="width: 30% !important;" name="currency_exchange" id="currency_exchange" placeholder="" value="1" required>
+                      </div>
+                    </div>
+        
+                  </div>
+                  <hr>
+                  
+        
+                  <p style="font-size: larger; font-weight: 500;">India</p>
+        
+                  <div class="form-row">
+        
+                      <div class="col-md-5">
+        
+                          <label class="" for="freight">Freight</label><br>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text "><b>₹</b></div>
+                            </div>
+                            <input type="text" class="form-control" style="width: 40% !important;" id="freight" name="freight" placeholder="" value="{{ '{:.2f}'.format(inputs[8])  }}" required>
+                          </div>
+        
+                      </div>
+        
+                      <div class="col-md-2"></div>
+        
+                      <div class="col-md-5">
+        
+                        <label class="" for="gst">GST Percentage</label><br>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><b>%</b></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 10% !important;" id="gst" name="gst" placeholder="" value="{{ '{:.2f}'.format(inputs[9])  }}" required>
+                        </div>
+        
+        
+        
+                    </div>
+        
+        
+                  </div>
+                  <hr>
+               
+        
+                  <p style="font-size: larger; font-weight: 500;">Destination Country</p>
+        
+                  <div class="form-row">
+
+                    <div class="col-md-3"></div>
+
+                    <div class="col-md-3">
+
+                      <label for="c_currency2">Currency</label><br>
+                      <select   class="form-select select_options" name="c_currency2" id="c_currency2" aria-label="Default select example" onchange="symbol_display2()" >
+                        {% if extra[1] == '₹' %}
+                        <option selected value="₹" >INR&nbsp;&nbsp;</option>
+                        <option value="AED">AED&nbsp;&nbsp;</option>
+                        <option  value="$" >USD&nbsp;&nbsp;</option>
+                        {% endif %}
+                        {% if extra[1] == 'AED' %}
+                        <option value="₹" >INR&nbsp;&nbsp;</option>
+                        <option selected value="AED">AED&nbsp;&nbsp;</option>
+                        <option  value="$" >USD&nbsp;&nbsp;</option>
+                        {% endif %}
+                        {% if extra[1] == '$' %}
+                        <option value="₹" >INR&nbsp;&nbsp;</option>
+                        <option value="AED">AED&nbsp;&nbsp;</option>
+                        <option selected value="$" >USD&nbsp;&nbsp;</option>
+                        {% endif %}
+                      </select>
+
+
+                    </div>
+
+          
+
+                    <div class="col-md-5">
+                      <label class="" for="currency_exchange2">Currency Exchange</label><br>
+                      <div class="input-group">
+
+                        <input type="text" style="width: 10% !important; font-weight: bold !important;" class="form-control bold" id="target_currency_symbol2" value="1{{ extra[1] }} " readonly>
+                        <input type="text" style="text-align: center !important;" class="form-control bold" id="" value="=" disabled>
+
+                        <div class="input-group-prepend">
+                          <div class="input-group-text "><b>₹</b></div>
+                        </div>
+                        <input type="text" class="form-control" style="" name="currency_exchange2" id="currency_exchange2" placeholder="" value="75" required>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3"></div>
+
+
+                  </div>
+                  <br>
+
+                   <!-- do -->
+                  <div class="form-row">
+
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <input type="text" class="form-control bold" id="do_label"  name="do_label" value="{{ inputs[23] }}" placeholder="e.g. - 5,10" required>
+
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><span class="dest_con_charges bold"><b>{{ extra[1] }}</b></span></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="do" name="do" placeholder="" value="{{ '{:.2f}'.format(inputs[10])  }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+
+
+                  </div>
+
+                  <br>
+                  <!-- bl fees -->
+                  <div class="form-row">
+
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <input type="text" class="form-control bold" id="bl_label"  name="bl_label" value="{{ inputs[24] }}" placeholder="e.g. - 5,10" required>
+
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><span class="dest_con_charges bold"><b>{{ extra[1] }}</b></span></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="bl" name="bl" placeholder="" value="{{ '{:.2f}'.format(inputs[11])  }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+
+
+                  </div>
+
+                  <br>
+                  <!-- thc -->
+                  <div class="form-row">
+
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <input type="text" class="form-control bold" id="thc_label"  name="thc_label" value="{{ inputs[25] }}" placeholder="e.g. - 5,10" required>
+
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><span class="dest_con_charges bold"><b>{{ extra[1] }}</b></span></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="thc" name="thc" placeholder="" value="{{ '{:.2f}'.format(inputs[12])  }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+
+
+                  </div>
+
+                  <br>
+                  <!-- others -->
+                  <div class="form-row">
+
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <input type="text" class="form-control" id="others_label"  name="others_label" value="{{ inputs[26] }}" placeholder="e.g. - 5,10" required>
+
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><span class="dest_con_charges bold"><b>{{ extra[1] }}</b></span></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="others" name="others" placeholder="" value="{{ '{:.2f}'.format(inputs[13])  }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+
+
+                  </div>
+                  <br>
+                  <!-- port -->
+                  <div class="form-row">
+
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <input type="text" class="form-control" id="port_label"  name="port_label" value="{{ inputs[27] }}" placeholder="e.g. - 5,10" required>
+
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><span class="dest_con_charges bold"><b>{{ extra[1] }}</b></span></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="port" name="port" placeholder="" value="{{ '{:.2f}'.format(inputs[14])  }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+
+
+                  </div>
+
+                  <br>
+                  <!-- documentation -->
+                  <div class="form-row">
+
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+
+                        <input type="text" class="form-control" id="documentation_label"  name="documentation_label" value="{{ inputs[28] }}" placeholder="e.g. - 5,10" required>
+
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><span class="dest_con_charges bold"><b>{{ extra[1] }}</b></span></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="documentation" name="documentation" placeholder="" value="{{ '{:.2f}'.format(inputs[15])  }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+
+
+                  </div>
+
+                  <br>
+                  <!-- transport -->
+                  <div class="form-row">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+
+                            <input type="text" class="form-control" id="transport_label"  name="transport_label" value="{{ inputs[29] }}" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><span class="dest_con_charges bold"><b>{{ extra[1] }}</b></span></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="transport" name="transport" placeholder="" value="{{ '{:.2f}'.format(inputs[16])  }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+
+                  </div>
+
+       
+                  <hr>
+               
+                  <p style="font-size: larger; font-weight: 500;">Charges</p>
+        
+        
+                  <div class="form-row">
+        
+                    <div class="col-md-5">
+        
+                        <label class="" for="custom_duty">Custom Duty</label><br>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><b>%</b></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="custom_duty" name="custom_duty" placeholder="" value="{{ '{:.2f}'.format(inputs[17])  }}" required>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-md-2"></div>
+        
+                    <div class="col-md-5">
+        
+                      <label class="" for="vat">VAT</label><br>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text "><b>%</b></div>
+                        </div>
+                        <input type="text" class="form-control" style="width: 10% !important;" id="vat" name="vat" placeholder="" value="{{ '{:.2f}'.format(inputs[18])  }}" required>
+                      </div>
+        
+        
+                    </div>
+                  </div>
+                  <hr>
+             
+                  <p style="font-size: larger; font-weight: 500;">Market </p>
+        
+                  <div class="form-row">
+        
+                    <div class="col-md-4">
+        
+                        <label class="" for="ex_factory_price">Ex Factory Price </label><br>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <div class="input-group-text "><b>₹</b></div>
+                          </div>
+                          <input type="text" class="form-control" style="width: 40% !important;" id="ex_factory_price" name="ex_factory_price" placeholder="" value="{{ '{:.2f}'.format(inputs[19])  }}" required>
+                        </div>
+        
+                    </div>
+        
+                    <div class="col-md-4">
+        
+                      <label class="" for="whole_seller">Whole Seller Margin </label><br>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text "><b>%</b></div>
+                        </div>
+                        <input type="text" class="form-control" style="width: 40% !important;" id="whole_seller" name="whole_seller" placeholder="" value="{{ '{:.2f}'.format(inputs[20])  }}" required>
+                      </div>
+        
+                  </div>
+        
+                    <div class="col-md-4">
+        
+                      <label class="" for="retailor_margin">Retailer Margin</label><br>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text "><b>%</b></div>
+                        </div>
+                        <input type="text" class="form-control" style="width: 10% !important;" id="retailor_margin" name="retailor_margin" placeholder="" value="{{ '{:.2f}'.format(inputs[21])  }}" required>
+                      </div>
+        
+        
+                    </div>
+                  </div>
+                  <hr>
+                
+        
+                  <div class="form-row">
+        
+                    <div class="col-md-4"></div>
+               
+                    
+                    <div class="col-md-4" >
+                      <button style="width: 100% !important;" type="submit" id="generate_report" class="btn btn-primary btn_style text_shadow"><b>Generate Report</b></button>
+
+                    </div>
+                    <div class="col-md-4">
+                      <!-- <input style="font-weight: 500; float: right !important; width: 100% !important;"  id="edit_inputs_hide" onclick="ShowHideDivinputs(this)" class="btn btn-secondary btn_style" type="button" value="Hide Inputs"> -->
+        
+                    </div>
+        
+                  </div>
+        
+        
+        
+        
+          </form>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script src="{{url_for('static', filename='javascript/container_js.js')}}"></script>
+</body>
+</html>

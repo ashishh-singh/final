@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title >Mission One Million</title>
+    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/index_style.css')  }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet"> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
+</head>
+<body>
+    <div class="row shadow" style="">
+        <div class="column c_1 "  style="margin-top: 0 !important; padding-top: 0 !important;">
+            <div class="container "style="">
+              
+                <div class="row " style="">
+                  <div class=" c_1 col-md-5 pads border-0" style="" >
+                    <img  id="c_1_image" style="" class="" src="../static/pictures/logo.png" alt="logo">
+                  </div>
+                  <div style="margin-left: -10px !important;" class=" col-md-4  border-0">
+                  </div>
+
+                </div>
+              </div>
+        </div>
+        <div class="column c_2" style="padding-left: 10% !important;">
+
+          <h2  class="tool_heading_style" id="tool_heading">6-Level Organization Structure</h2>
+          
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column c2_1" style="background-color: #069CCE;">
+            <!-- <br> -->
+            <!-- <hr class="my-4"> -->
+            <h2 style=" text-shadow: 2px 2px 4px #000000;" class=" ">&nbsp;&nbsp;<i class="fas fa-tools"></i>&nbsp;Tools</h2>
+            <!-- <hr class="my-4"> -->
+            <br>
+            <button id="btn_001" class="btn_color shadow p-2 mb-3 bg rounded text_shadow"  onclick="display_container1()"><i  class="fas fa-sitemap shadow "></i>&nbsp;&nbsp;6-level Org. Structure </button>
+            <button id="btn_002" class="btn_color shadow p-3 mb-3 bg rounded text_shadow" onclick="display_container()"><i class="fas fa-box-open shadow"></i>&nbsp;&nbsp;Ship Container Capacity </button>
+            <button id="btn_003" class="btn_color shadow p-3 mb-5 bg rounded text_shadow" onclick="display_container2()"><i class="fas fa-tags"></i>&nbsp;&nbsp;Supplier Chain Structure </button>
+        
+        </div>
+        <div class="column c2_2"  >
+            <br>
+            <!-- 6-level org. -->
+            <div style="width: 80%; margin: auto !important; " class="shadow p-3 mb-5 bg-white rounded " id="form_001">
+                <form action="/" method="POST">
+
+                    <div class="form-row">
+                        <div class="form-group col-md-4" style="display: none !important;">
+                          <label for="current_currency">Current Currency</label><br>
+                          <select style="width: 90%;" class="form-select" name="current_currency" id="current_currency" aria-label="Default select example">
+                            <option selected value="₹">INR</option>
+                            <option value="AED">AED</option>
+                            <option value="$">USD</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                          <label style="" class="md-3" for="target_Currency">Current Currency</label><br>
+
+                          <select style="width: 90%;" class="form-select" name="target_Currency" id="target_Currency" aria-label="Default select example">
+                            <option selected value="₹">INR</option>
+                            <option value="AED">AED</option>
+                            <option value="$">USD</option>
+                          </select>
+                        </div>
+
+
+                        <div style="" class="form-group col-md-6">
+                          <label  for="margin_per">Markup Percentage</label>
+                          <input type="text" class="form-control" id="margin_per" name="margin_per" value="20" placeholder="e.g. - 20,30,50">
+                        </div>
+             
+                    </div>
+                    <div class="form-row" style="display: none !important;">
+                      <div class="form-group col-md-6">
+                        <label for="currency_factor">Target Currency Factor</label>
+                        <input type="text" class="form-control" name="currency_factor" id="currency_factor" value="1" placeholder="e.g. - 1, 1/2, 0.5" required>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="country_factor">Target Currency Country Factor</label>
+                        <input type="text" class="form-control" name="country_factor" id="country_factor" value="1" placeholder="e.g. - 1, 1/2, 0.5" required>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="daily_wage">Avg. Daily Wage</label>
+                          <input type="text" class="form-control" id="daily_wage"  name="daily_wage" placeholder="e.g. - 3000" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="estb_amount">Total Establishment Amount</label>
+                          <input type="text" class="form-control" id="estb_amount" name="estb_amount" onkeyup="limit_estb_amt()" placeholder="e.g. - 60000" required>
+                        </div>
+                    </div>
+                
+                    <div class="form-row">
+                      <div class="form-group col-md-4">
+                        <label for="team_size">Team Size</label>
+                        <input type="text" class="form-control" id="team_size" name="team_size"  onkeyup="limit_teamsize()" placeholder="e.g. - 16" required>
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="days_month">No. of working Days/Month</label>
+                        <input type="text" class="form-control" id="days_month"  name="days_month" value="20" placeholder="e.g. - 20"required >
+                      </div>
+                      <div class="form-group col-md-4">
+                        <label for="factor_for_lead">Factor For Lead</label>
+                        <input type="text" class="form-control" id="factor_for_lead" name="factor_for_lead" value="2" placeholder="e.g. - 1.5, 2" required>
+                      </div>
+                    </div>
+               
+                    <button type="submit" id="generate_table" class="btn btn-primary text_shadow">Generate Table</button>
+                  </form>
+            </div>
+            <!-- container Capacity -->
+            <div  style="width: 55%; display: none;" class="shadow p-3 mb-5 bg-white rounded " id="form_002">
+                    <form action="/container" method="POST">
+
+                      <p style="font-size: larger; font-weight: 500;">Container Size</p>
+
+
+                      <div class="form-row">
+
+                          <div class="form-group col-md-4" style="">
+
+                            <label style=""  for="container_size">Container Size&nbsp;</label>
+                            <select style="" class="form-select  select_options" name="container_size" id="container_size" onchange="volume()" aria-label="Default select example" >
+                              <option selected value="20">20ft&nbsp;&nbsp; </option>
+                              <option value="40">40ft&nbsp;&nbsp;  </option>
+                            </select>
+
+                          </div>
+                          <div class="form-group col-md-4" style="">
+                            <label for="volume_cartoon">Container Volume (in³)</label>
+                            <input type="text" class="form-control" id="volume_cartoon"  name="volume_cartoon" value="23,50,080" placeholder="e.g. - 5,10" disabled>
+                          </div>
+                          <div class="form-group col-md-4" style=""></div>
+                      </div>
+                      <hr>
+                      <p style="font-size: larger; font-weight: 500;">Carton Size</p>
+
+                      <div class="form-row">
+     
+                          <div class="form-group col-md-4">
+
+                            <label   for="dimension_unit">Carton Unit</label>
+                            <select style="" class="form-select select_options " name="dimension_unit" id="dimension_unit" aria-label="Default select example">
+                              <option  value="ft">Foot&nbsp;&nbsp;</option>
+                              <option selected value="inch">Inches&nbsp;&nbsp;</option>
+                              <option value="mtr">Meter&nbsp;&nbsp;</option>
+                            </select>
+
+                          </div>
+
+                          <div class="form-group col-md-4">
+
+                            <label for="item_cartoon">Items per Carton</label>
+                            <input type="text" class="form-control" id="item_cartoon"  name="item_cartoon" value="4" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                      </div>
+
+                      <div class="form-row">
+
+                        <div class="form-group col-md-4">
+                          <label for="length_cartoon">Carton Length</label>
+                          <input type="text" class="form-control" name="length_cartoon" id="length_cartoon" value="25.5" placeholder="e.g. - 1, 0.5" required>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                          <label for="width_cartoon">Carton Width </label>
+                          <input type="text" class="form-control" name="width_cartoon" id="width_cartoon" value="22" placeholder="e.g. - 1, 0.5" required>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                          <label for="height_cartoon">Carton Height</label>
+                          <input type="text" class="form-control" name="height_cartoon" id="height_cartoon" value="15" placeholder="e.g. - 1, 0.5" required>
+                        </div>
+
+
+                      </div>
+                      <!-- <hr>
+ 
+
+                      <p style="font-size: larger; font-weight: 500;">Currency Change</p> -->
+
+                      <div class="form-row" style="display: none;">
+
+                        <div class="form-group col-md-4">
+                            <label for="c_currency">Currency</label><br>
+                            <select   class="form-select select_options" name="c_currency" id="c_currency" aria-label="Default select example" onchange="symbol_display()" >
+                              <option value="₹" selected>INR&nbsp;&nbsp;</option>
+                              <option value="AED">AED&nbsp;&nbsp;</option>
+                              <option value="$" >USD&nbsp;&nbsp;</option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+
+                        <div class="col-md-6">
+
+                          <label class="" for="currency_exchange">Currency Exchange</label><br>
+                          <div class="input-group">
+
+                            <input type="text" style="width: 10% !important;" class="form-control bold" id="target_currency_symbol" value="1 INR  = " readonly>
+                            <!-- <input type="text" style="text-align: center !important;" class="form-control bold" id="" value="=" disabled> -->
+
+                            <div class="input-group-prepend">
+                              <div class="input-group-text "><b>₹</b></div>
+                            </div>
+                            <input type="text" class="form-control" style="width: 30% !important;" name="currency_exchange" id="currency_exchange" placeholder="" value="1" required>
+                          </div>
+                        </div>
+
+                      </div>
+                      <hr>
+                   
+
+                      <p style="font-size: larger; font-weight: 500;">India</p>
+
+                      <div class="form-row">
+
+                          <div class="col-md-5">
+
+                              <label class="" for="freight">Freight</label><br>
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text "><b>₹</b></div>
+                                </div>
+                                <input type="text" class="form-control" style="width: 40% !important;" id="freight" name="freight" placeholder="" value="76490" required>
+                              </div>
+
+                          </div>
+
+                          <div class="col-md-2"></div>
+
+                          <div class="col-md-5">
+
+                            <label class="" for="gst">GST Percentage</label><br>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><b>%</b></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 10% !important;" id="gst" name="gst" placeholder="" value="18" required>
+                            </div>
+
+
+
+                        </div>
+
+
+                      </div>
+                      <hr>
+                      
+
+                      <p style="font-size: larger; font-weight: 500;">Destination Country</p>
+
+                      <div class="form-row">
+
+                          <div class="col-md-3"></div>
+
+                          <div class="col-md-3">
+
+                            <label for="c_currency2">Currency</label><br>
+                            <select   class="form-select select_options" name="c_currency2" id="c_currency2" aria-label="Default select example" onchange="symbol_display2()" >
+                              <option value="₹" >INR&nbsp;&nbsp;</option>
+                              <option value="AED">AED&nbsp;&nbsp;</option>
+                              <option selected value="$" >USD&nbsp;&nbsp;</option>
+                            </select>
+
+
+                          </div>
+
+                
+
+                          <div class="col-md-5">
+                            <label class="" for="currency_exchange2">Currency Exchange</label><br>
+                            <div class="input-group">
+
+                              <input type="text" style="width: 10% !important; font-weight: bold !important;" class="form-control bold" id="target_currency_symbol2" value="1 $  " readonly>
+                              <input type="text" style="text-align: center !important;" class="form-control bold" id="" value="=" disabled>
+
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><b>₹</b></div>
+                              </div>
+                              <input type="text" class="form-control" style="" name="currency_exchange2" id="currency_exchange2" placeholder="" value="75" required>
+                            </div>
+                          </div>
+
+                          <div class="col-md-3"></div>
+
+
+                      </div>
+                      <br>
+
+                      <!-- do -->
+                      <div class="form-row">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+
+                            <input type="text" class="form-control " id="do_label"  name="do_label" value="DO" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><span class="dest_con_charges bold"><b>$</b></span></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="do" name="do" placeholder="" value="80" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+
+                      </div>
+
+                      <br>
+                      <!-- bl fees -->
+                      <div class="form-row">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+
+                            <input type="text" class="form-control " id="bl_label"  name="bl_label" value="BL" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><span class="dest_con_charges bold"><b>$</b></span></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="bl" name="bl" placeholder="" value="150" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+
+                      </div>
+
+                      <br>
+                      <!-- thc -->
+                      <div class="form-row">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+
+                            <input type="text" class="form-control " id="thc_label"  name="thc_label" value="THC" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><span class="dest_con_charges bold"><b>$</b></span></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="thc" name="thc" placeholder="" value="201" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+
+                      </div>
+
+                      <br>
+                      <!-- others -->
+                      <div class="form-row">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+
+                            <input type="text" class="form-control" id="others_label"  name="others_label" value="Others" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><span class="dest_con_charges bold"><b>$</b></span></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="others" name="others" placeholder="" value="68" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+
+                      </div>
+                      <br>
+                      <!-- port -->
+                      <div class="form-row">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+
+                            <input type="text" class="form-control" id="port_label"  name="port_label" value="Port" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><span class="dest_con_charges bold"><b>$</b></span></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="port" name="port" placeholder="" value="100" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+
+                      </div>
+
+                      <br>
+                      <!-- documentation -->
+                      <div class="form-row">
+
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+
+                            <input type="text" class="form-control" id="documentation_label"  name="documentation_label" value="Documentation" placeholder="e.g. - 5,10" required>
+
+                        </div>
+                        <div class="col-md-5">
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><span class="dest_con_charges bold"><b>$</b></span></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="documentation" name="documentation" placeholder="" value="95" required>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+
+
+                      </div>
+
+                      <br>
+                      <!-- transport -->
+                      <div class="form-row">
+
+                            <div class="col-md-1"></div>
+                            <div class="col-md-5">
+
+                                <input type="text" class="form-control" id="transport_label"  name="transport_label" value="Transport" placeholder="e.g. - 5,10" required>
+
+                            </div>
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <div class="input-group-text "><span class="dest_con_charges bold"><b>$</b></span></div>
+                                  </div>
+                                  <input type="text" class="form-control" style="width: 40% !important;" id="transport" name="transport" placeholder="" value="250" required>
+                                </div>
+                            </div>
+                            <div class="col-md-1"></div>
+
+
+                      </div>
+                
+              
+                      <hr>
+                      
+                      <p style="font-size: larger; font-weight: 500;">Charges</p>
+
+
+                      <div class="form-row">
+
+                        <div class="col-md-5">
+
+                            <label class="" for="custom_duty">Custom Duty</label><br>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><b>%</b></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="custom_duty" name="custom_duty" placeholder="" value="5" required>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-5">
+
+                          <label class="" for="vat">VAT</label><br>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text "><b>%</b></div>
+                            </div>
+                            <input type="text" class="form-control" style="width: 10% !important;" id="vat" name="vat" placeholder="" value="5" required>
+                          </div>
+
+
+                        </div>
+                      </div>
+                      <hr>
+                      
+                      <p style="font-size: larger; font-weight: 500;">Market </p>
+
+                      <div class="form-row">
+
+                        <div class="col-md-4">
+
+                            <label class="" for="ex_factory_price">Ex Factory Price </label><br>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <div class="input-group-text "><b>₹</b></div>
+                              </div>
+                              <input type="text" class="form-control" style="width: 40% !important;" id="ex_factory_price" name="ex_factory_price" placeholder="" value="4800" required>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                          <label class="" for="whole_seller">Whole Seller Margin </label><br>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text "><b>%</b></div>
+                            </div>
+                            <input type="text" class="form-control" style="width: 40% !important;" id="whole_seller" name="whole_seller" placeholder="" value="11" required>
+                          </div>
+
+                      </div>
+
+                        <div class="col-md-4">
+
+                          <label class="" for="retailor_margin">Retailer Margin</label><br>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text "><b>%</b></div>
+                            </div>
+                            <input type="text" class="form-control" style="width: 10% !important;" id="retailor_margin" name="retailor_margin" placeholder="" value="40" required>
+                          </div>
+
+
+                        </div>
+                      </div>
+                      <hr>
+                      
+
+                      <div class="form-row">
+
+                        <div class="col-md-4"></div>
+
+
+
+                        <div class="col-md-4">
+
+                          <button style="width: 100% !important;" type="submit" id="generate_report" class="btn btn-primary btn_style text_shadow"><b>Generate Report</b></button>
+
+                        </div>
+
+                        <div class="col-md-4"></div>
+                      </div>
+
+
+
+
+              </form>
+            </div>
+            <!-- supply Chain -->
+            <div  style="width: 85% !important; margin: auto !important; display: none;" class="shadow p-3 mb-5 bg-white rounded margin" id="form_003">
+                  <form action="/supply_chain" method="POST">
+
+                        <p style="font-size: larger; font-weight: 500;">Supply Chain Level</p>
+
+
+                        <div class="form-row bold" style="text-align: center !important;">
+                          <!-- <div class="form-group col-md-3">
+                              <label for="currency_factor">No. of Level</label>
+                              <input type="text" class="form-control" name="no_of_level" id="no_of_level" value="6" placeholder="e.g. - 6,7" required>
+                          </div> -->
+                          <div class="form-group col-md-2">
+                                <label for="country_factor">Target Customers</label>
+                                <input type="text" class="form-control" name="target_customer" id="target_customer" value="10000" onchange="customer_value()" placeholder="e.g. - 10000" required>
+                          </div>
+                          <div class="form-group col-md-1">
+                                <label for="supply_currency">Currency</label><br>
+                                <select   class="form-select select_options" style="width: 100% !important;" name="supply_currency" id="supply_currency" aria-label="Default select example" onchange="customer_symbol()" >
+                                  <option value="₹" >INR&nbsp;&nbsp;</option>
+                                  <option value="AED" selected>AED&nbsp;&nbsp;</option>
+                                  <option value="$" >USD&nbsp;&nbsp;</option>
+                                </select>
+
+                          </div>
+                          <div class="form-group col-md-3">
+                              <label for="mrp">MRP</label>
+                              <input type="text" class="form-control" name="mrp" id="mrp" value="1750" placeholder="e.g. - 1750" required>
+                          </div>
+                          <!-- cost price -->
+                          <div class="form-group col-md-2">
+                              <label for="cost_price">Cost price</label>
+                              <input type="text" class="form-control" name="cost_price" id="cost_price" value="" placeholder="e.g. - 630" >
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label for="invest_amt">Investment Amount</label>
+                            <input type="text" class="form-control" name="invest_amt" id="invest_amt" value="75" placeholder="e.g. - 1750" required>
+                          </div>
+                          <div class="form-group col-md-2">
+                            <label for="invest_per">Investment (%)</label>
+                            <input type="text" class="form-control" name="invest_per" id="invest_per" value="10" placeholder="e.g. - 1750" required>
+                          </div>
+
+                        </div>                     
+    
+                        <button id="input_generate_btn" style ="float: right !important; display: none !important;" class="btn btn-primary" onclick="">Generate Table</button>                 
+                      
+                        <table class="table table-bordered bold shadow tb_001 margin" style="width: 80% !important; margin-left: auto !important; margin-right: auto !important;"  id="table_div_pr1"> 
+                          <thead class="thead-dark border_box table_styl_cust bold" style="text-align: center !important;">
+                            <tr>
+                              <th  colspan="2" class="dr"> Enter Input(s)</th>
+                              <th class="border-0"></th>
+                              <th class="border-0"></th>
+                              <th class="border-0"></th>
+                              <!-- <th class="border-0"></th> -->
+                      
+                            </tr>
+                            <tr style="text-align: center !important;">
+                              <th style="width: 1% !important;" class="float_left border-0">#</th>
+                              <th style="width: 10% !important;" class="">Level</th>
+                              <th style="width: 5% !important;" class="">Number</th>
+                              <th style="width: 5% !important;" class="">Margin %</th>
+                              <th style="width: 5% !important;" class="">Direct Cost</th>     
+                  
+                            </tr>
+                          </thead>
+                          <tbody class="bold">
+                                <tr>
+                                    <td style="width: 1% !important;">1.</td>
+                                    <td scope="col"  style="width: 10% !important;" class=""><input type="text" class="form-control  bold float_left" name="level_name1" id="level_name1" value="Manufacturer" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="number1" id="number1" value="1" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage1" id="margin_percentage1" value="0" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost1" id="direct_cost1" value="0" placeholder="" required></td>
+                            
+          
+                                </tr>
+                                <tr>
+                                    <td style="width: 1% !important;">2.</td>
+                                    <td style="width: 10% !important;" scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name2" id="level_name2" value="Master Distributor" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="number2" id="number2" value="1" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage2" id="margin_percentage2" value="10" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost2" id="direct_cost2" value="125000" placeholder="" required></td>
+                                    
+          
+          
+                                  </tr>
+                                <tr>
+                                    <td style="width: 1% !important;">3.</td>
+                                    <td style="width: 10% !important;" scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name3" id="level_name3" value="Country Distributor" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="number3" id="number3" value="4" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage3" id="margin_percentage3" value="12" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost3" id="direct_cos3" value="43750" placeholder="" required></td>
+        
+          
+                                  </tr>
+                                <tr>
+                                    <td style="width: 1% !important;">4.</td>
+                                    <td style="width: 10% !important;" scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name4" id="level_name4" value="Sub Distributor" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="number4" id="number4" value="5" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage4" id="margin_percentage4" value="18" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost4" id="direct_cost4" value="10000" placeholder="" required></td>
+    
+          
+                                  </tr>
+                                <tr>
+                                    <td style="width: 1% !important;">5.</td>
+                                    <td style="width: 10% !important;" scope="col" class=""><input type="text" class="form-control bold float_left" name="level_name5" id="level_name5" value="Retailor" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="number5" id="number5" value="25" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage5" id="margin_percentage5" value="24" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" class=""><input type="text" class="form-control bold float_right" name="direct_cost5" id="direct_cost5" value="0" placeholder="" required></td>
+          
+          
+                                  </tr>
+                                <tr>
+                                    <td style="width: 1% !important;">6.</td>
+                                    <td style="width: 10% !important;" scope="col" style="width: 15% !important;" class=""><input type="text" class="form-control bold float_left" name="level_name6" id="level_name6" value="Customer" placeholder="" required>
+                                    <td style="width: 5% !important;" scope="col" style="width: 10% !important;" class=""><input type="text" class="form-control bold float_right" name="number6" id="number6" value="10000" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" style="width: 5% !important;" class=""><input type="text" class="form-control bold float_right" name="margin_percentage6" id="margin_percentage6" value="0" placeholder="" required></td>
+                                    <td style="width: 5% !important;" scope="col" style="width: 10% !important;" class=""><input type="text" class="form-control bold float_right" name="direct_cost6" id="direct_cost6" value="0" placeholder="" required></td>
+        
+          
+                                </tr>
+                          </tbody>
+                        </table>
+                        <div class="form-row bold"  style="text-align: center !important; display: none !important; ">
+
+                        <div class="form-group col-md-3">
+                                <label for="supply_curr_exchange">Exchange Amount</label>
+                                <input type="text" class="form-control" name="supply_curr_exchange" id="supply_curr_exchange" value="1" onchange="" placeholder="e.g. - 10000" required>
+                        </div>
+                        <div class="form-group col-md-3">
+                          <select   class="form-select select_options" style="width: 100% !important;" name="supply_currency1" id="supply_currency1" aria-label="Default select example" onchange="" >
+       
+                            <option value="AED" selected>AED</option>
+                            <option value="₹">INR</option>
+                            <option value="$" >USD</option>
+                    
+                          </select>
+       
+        
+                        </div>
+                        <div class="form-group col-md-3">
+                        </div>
+                        <div class="form-group col-md-3">
+                        </div>
+    
+                      </div>
+
+
+
+
+                  </form>
+            </div>
+
+      </div>
+    </div>
+   
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="{{url_for('static', filename='javascript/index_js.js')}}"></script>
+
+
+</body>
+</html>

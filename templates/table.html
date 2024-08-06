@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title >Mission One Million</title>
+
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/table_style.css')  }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+</head>
+<body id="main_div">
+
+    <div class="row shadow" id="nav_box">
+        <div class="column c_1 border_box " style="margin-top: 0 !important; padding-top: 0 !important;" >
+            <div class="container ">
+              
+                <div class="row  border_box" >
+                  <div class=" c_1 col-md-5 pads  border_box">
+                    <img  id="c_1_image" class="" src="../static/pictures/logo.png" alt="logo">
+                  </div>
+                  <div style="margin-left: -10px !important;" class=" col-md-4    border_box">
+               
+                  </div>
+
+                </div>
+              </div>
+        </div>
+        <div class="column c_2 border_box" >
+
+          <p style="" class="" id="tool_heading">6-Level Organization Structure</p>
+          
+          <div class="float-right " >
+
+            <button  id="display_col_table" style="color: white ;" value="Yes" class="btn btn-info  text_shadow"  ><b>View Full Table</b></button>
+
+            <button  id="edit_inputs" style="color: white ;" value="Yes" class="btn btn-warning  text_shadow" onclick="ShowHideDiv(this)" ><b>Edit Input(s)</b></button>
+
+            <!-- <a href="/excel_download/{{ filename }}" class="btn btn-success text_shadow" ><b>Download Excelsheet</b></a> -->
+            <button  id="download_pdf" style="color: white ;"  class="btn btn-danger text_shadow" onclick="window.print()" ><b>Download PDF</b></button>
+
+            <a href="/" class="btn btn-info " ><i class="fas fa-home text_shadow" style="size: 3x; padding: 0 !important"></i></a>
+
+
+            
+
+          </div>
+          
+        </div>
+    </div>
+    </div>
+    
+    <br>
+
+    <div style=" " class="shadow p-3 mb-5 bg-white rounded mh-100 " id="input_table_001">
+        <form action="/" method="POST">
+
+          <div class="form-row">
+            <br>
+            <div class="form-group col-md-2">
+
+              <label for="current_currency">Current Currency</label><br>
+              <select  style="width: 90% !important;" class="form-select" name="current_currency" id="current_currency" aria-label="Default select example">
+
+                {% if inputs[0] == '$' %}
+                    <option value="AED">AED</option>
+                    <option value="₹">INR</option>
+                    <option value="$" selected>USD</option>
+                {% endif %}
+                {% if inputs[0] == 'AED' %}
+                  <option value="AED" selected>AED</option>
+                  <option value="₹">INR</option>
+                  <option value="$" >USD</option>
+                {% endif %}
+
+                {% if inputs[0] == '₹' %}
+                  <option value="AED">AED</option>
+                  <option value="₹"selected>INR</option>
+                  <option value="$" >USD</option>
+                {% endif %}
+
+              </select>
+          
+            </div>
+   
+  
+            <div class="form-group col-md-2">
+              <label for="currency_factor">Target Currency Factor</label>
+              <input type="text" class="form-control" name="currency_factor" id="currency_factor" value="{{ inputs[6] }}" placeholder="e.g. - 1, 1/2, 0.5" required>
+            </div>
+
+
+            <div class="form-group col-md-2">
+              <label for="country_factor">Target Curr. Country Factor</label>
+              <input type="text" class="form-control" name="country_factor" id="country_factor" value="{{ inputs[7] }}" placeholder="e.g. - 1, 1/2, 0.5" required>
+            </div>
+
+
+            <div style="" class="form-group col-md-2">
+              <label for="margin_per">Markup Percentage</label>
+              <input type="text" class="form-control" id="margin_per" name="margin_per" placeholder="e.g. - 20 , 50" value="{{ inputs[8] }}">
+            </div>
+
+
+            <div class="form-group col-md-2">
+              <label for="factor_for_lead">Factor For Lead</label>
+              <input type="text" class="form-control" id="factor_for_lead" name="factor_for_lead" value="{{ inputs[2] }}" placeholder="e.g. - 1.5, 2" required>
+            </div>
+
+            <div class="form-group col-md-2">
+              <br>
+              <button style="" type="submit" id="generate_table" class="btn btn-primary btn_style"><b>Generate Table</b></button>
+
+            </div>
+         
+         
+          </div>
+          <br>
+          <div class="form-row">
+
+            <div  class="form-group col-md-2 ">
+              <label  class="md-3 " for="target_Currency">Target Currency</label><br>
+              <select style="width: 90% !important;" class="form-select " name="target_Currency" id="target_Currency" aria-label="Default select example">
+                {% if inputs[0] == '$' %}
+                  <option value="AED">AED</option>
+                  <option value="₹">INR</option>
+                  <option value="$" selected>USD</option>
+                {% endif %}
+                {% if inputs[0] == 'AED' %}
+                  <option value="AED" selected>AED</option>
+                  <option value="₹">INR</option>
+                  <option value="$" >USD</option>
+                {% endif %}
+
+                {% if inputs[0] == '₹' %}
+                  <option value="AED">AED</option>
+                  <option value="₹"selected>INR</option>
+                  <option value="$" >USD</option>
+                {% endif %}
+        
+                
+              </select>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label for="daily_wage">Avg. Daily Wage</label>
+              <input type="text" class="form-control" id="daily_wage"  name="daily_wage" value="{{ inputs[1] }}" placeholder="e.g. - 3000" required>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="estb_amount">Total Establishment Amount</label>
+              <input type="text" class="form-control" id="estb_amount" name="estb_amount" value="{{ inputs[5] }}"  onkeyup="limit_estb_amt()" placeholder="e.g. - 60000" required>
+            </div>
+ 
+            <div class="form-group col-md-2">
+              <label for="team_size">Team Size</label>
+              <input type="text" class="form-control" id="team_size" name="team_size" value="{{ inputs[4] }}" onkeyup="limit_teamsize()" placeholder="e.g. - 16" required>
+            </div>
+
+            <div class="form-group col-md-2">
+              <label for="days_month">No. of Working Days/Month</label>
+              <input type="text" class="form-control" id="days_month"  name="days_month" value="{{ inputs[3] }}" placeholder="e.g. - 20"required >
+            </div>
+
+
+            <div class="form-group col-md-2">
+              <br>
+              <input style="font-weight: 500;"  id="edit_inputs1" onclick="ShowHideDiv3(this)" class="btn btn-secondary btn_style" type="button" value="Hide">
+
+            </div>
+            <div style="display: none !important;" class="form-group col-md-2">
+              <label for="team_size">daily_wage_float</label>
+              <input type="text" class="form-control" id="daily_wage_float" name="daily_wage_float" value="{{ float_inputs[0] }}" placeholder="e.g. - 16" >
+            </div>
+            <div style="display: none !important;" class="form-group col-md-2">
+              <label for="team_size">ec_float</label>
+              <input type="text" class="form-control" id="ec_float" name="ec_float" value="{{ float_inputs[1] }}" placeholder="e.g. - 16" >
+            </div>
+
+            <br>
+
+          </div>
+      
+       
+
+        </form>
+         
+    </div>
+ 
+    <br>
+
+
+    <div class=""  style=" margin: 0 !important; width: 100%;">
+      <div class="row" style=" margin: 0 !important;">
+
+        <div class="col-4" id="summary_t">
+            <div class="table table-bordered border-0 custom_table_style"  style="">
+
+            <table class="table center shadow bold"  >
+                <thead class="thead-dark" >
+              
+                <tr id="">
+                  <th class="" scope="col">Summary</th>
+                  <th class="" scope="col">Unit</th>
+                  <th class="" scope="col">Total Annual</th>
+                  <th class="" scope="col">Daily Average</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                      
+                        <tr>
+                          <td class="" scope="col">Head count</td>
+                          <td class="" scope="col">HC</td>
+                          <td class="" scope="col">{{ "{:,}".format(summary_overall[0])  }}</td>
+                          <td class="" scope="col">{{ "{:,}".format(summary_overall[0])  }}</td>
+
+
+                        </tr>
+                        <tr>
+                          <td class="" scope="col">Man Days</td>
+                          <td class=""  scope="col">days</td>
+                          <td class=""  scope="col">{{ "{:,}".format(summary_overall[1])  }}</td>
+                          <td class=""  scope="col">{{ "{:,}".format(summary_overall[2])  }}</td>
+
+                        </tr>
+                        <tr>
+                          <td class="" scope="col">Establishment Cost</td>
+                          <td class=""  scope="col">{{inputs[0]}}</td>
+                          <td class="" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[3])  }}</td>
+                          <td class="" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[4])  }}</td>
+
+                        </tr>
+                        <tr>
+                          <td class="" scope="col">Head Count Cost</td>
+                          <td class=""  scope="col">{{inputs[0]}}</td>
+                          <td class="" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[5])  }}</td>
+                          <td class="" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[6])  }}</td>
+
+                        </tr>
+                        <tr>
+                          <td class="gray" scope="col">Sub Total</td>
+                          <td class="gray"  scope="col">{{inputs[0]}}</td>
+                          <td class="gray" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[7])  }}</td>
+                          <td class="gray" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[8])  }}</td>
+
+                        </tr>
+                        <tr>
+                          <td class="" scope="col">Markup @ {{ inputs[8] }}%</td>
+                          <td class=""  scope="col">{{inputs[0]}}</td>
+                          <td class="" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[9])  }}</td>
+                          <td class="" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[10])  }}</td>
+
+                        </tr>
+                        <tr>
+                          <td class="mr" scope="col">Total Expected Revenue</td>
+                          <td class="mr"  scope="col">{{inputs[0]}}</td>
+                          <td class="mr" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[11])  }}</td>
+                          <td class="mr" scope="col">{{ "{}{:,}".format(inputs[0],summary_overall[12])  }}</td>
+
+                        </tr>
+                      
+
+
+
+
+                </tbody>
+            </table>
+
+        </div>
+        </div>
+ 
+        <div class="col-8   " >
+            <div class="center main_table  custom_table_style"   >
+              
+            <table class="table table-bordered center shadow bold " style="padding: 0 !important;"  id="table00002" >
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Level<br> <span class="formula">(L)</span></th>
+                    <th scope="col">HC<br> <span class="formula">(HC)</span></th>
+                    <th class="dr" scope="col">Daily Rate {{inputs[0] }}<br> <span class="formula">(DR)</span></th>
+                    <th scope="col">Daily Cost {{inputs[0] }}<br> <span class="formula">(DC = DR*HC)</span></th>
+                    <th class="mr" scope="col">Monthly Rate {{inputs[0] }}<br> <span class="formula">(MR = DR*{{inputs[3]}})</span></th>
+                    <th scope="col">Monthly Cost {{inputs[0] }}<br> <span class="formula">(MC=MR*HC)</span></th>
+                    <th class="ar" scope="col">Annual Rate {{inputs[0] }}<br> <span class="formula">(AR = MR*12)</span></th>
+                    <th scope="col">Annual Cost {{inputs[0] }}<br> <span class="formula">(AC = AR*HC)</span></th>
+                    <th class="display_col " scope="col">Income Share</th>
+                    <th class="display_col" scope="col ">Cummulative</th>
+                    <th class="display_col" scope="col ">% of Head <br> Count</th>
+                    <th class="display_col" scope="col ">Cumulative</th>
+                    <th class="display_col" scope="col ">CUM HC</th>
+                    <th class="display_col" scope="col ">Cum Daily Cost {{inputs[0] }}</th>
+                    <th class="display_col" scope="col ">Chargeable <br> Daily Rate {{inputs[0] }}</th>
+                    <th class="display_col" scope="col ">Avg to Min</th>
+                    <th class="display_col" scope="col ">Max to Min</th>
+                  </tr>
+          
+                </thead>
+                <tbody>             
+                    {% for i in range(0,df|length) %}
+                        <tr>
+                        
+                            <td>{{df.Level[i]}}</td>
+                            <td scope="col">{{ "{:,}".format(df.HC[i])  }}</td>
+                            <td class="dr" scope="col">{{ "{}{:,}".format(inputs[0],df.Daily_Rates[i])  }}</td>
+                            <td scope="col">{{ "{}{:,}".format(inputs[0],df.Daily_Cost[i])  }} </td>
+                            <td class="mr" scope="col">{{ "{}{:,}".format(inputs[0],df.Monthly_Rates[i])  }}</td>
+                            <td scope="col">{{ "{}{:,}".format(inputs[0],df.Monthly_Cost[i])  }}</td>
+                            <td class="ar" scope="col">{{ "{}{:,}".format(inputs[0],df.Annual_Rate[i])  }}</td>
+                            <td  scope="col">{{ "{}{:,}".format(inputs[0],df.Annual_Cost[i])  }}</td>
+                            <td class="display_col" scope="col ">{{df.Income_Share[i]}}%</td>
+                            <td class="display_col" scope="col ">{{df.Cumulative_Share[i]}}%</td>
+                            <td class="display_col" scope="col ">{{df.Head_Share[i]}}%</td>
+                            <td class="display_col" scope="col ">{{df.Cumulative_Share_head[i]}}%</td>
+                            <td class="display_col" scope="col ">{{df.Cum_HC[i]}}</td>
+                            <td class="display_col" scope="col ">{{ "{}{:,}".format(inputs[0],df.Cum_Daily_Cost[i])  }}</td>
+                            <td class="display_col" scope="col ">{{ "{}{:,}".format(inputs[0],df.Chargeable_Daily_Rate[i])  }}</td>
+                            <td class="display_col" scope="col ">{{df.Avg_to_Min[i]}}</td>
+                            <td class="display_col" scope="col ">{{df.Max_to_Min[i]}}</td>
+
+
+                        </tr>
+                    {% endfor %}
+
+               
+
+                </tbody>
+            </table>
+
+
+          </div>
+
+                      <div class="center main_table  custom_table_style"   >
+
+
+              <table class="table center shadow bold" id="table0003" style="">
+
+                <thead class="thead-dark">
+                  <tr>
+                      <th scope="col">Level&nbsp;&nbsp;</th>
+                      <th scope="col"> HC</th>
+                      <th class="dr" scope="col">Daily Rate {{inputs[0] }}</th>
+                      <th scope="col">Daily Cost {{inputs[0] }}</th>
+                      <th class="mr" scope="col">Monthly Rate {{inputs[0] }}</th>
+                      <th scope="col">Monthly Cost {{inputs[0] }}</th>
+                      <th class="ar" scope="col">Annual Rate {{inputs[0] }}</th>
+                      <th scope="col">Annual Cost {{inputs[0] }}</th>
+            
+                    </tr>
+            
+                  </thead>
+
+                  <tbody>
+
+                          <tr>
+
+                              <td scope="col"></td>
+                              <td scope="col">{{total[0]}}</td>
+                              <td class="dr" scope="col">{{ "{}{:,}".format(inputs[0],total[1])  }}</td>
+                              <td scope="col">{{ "{}{:,}".format(inputs[0],total[2])  }}</td>
+                              <td  class="mr" scope="col">{{ "{}{:,}".format(inputs[0],total[3])  }}</td>
+                              <td scope="col">{{ "{}{:,}".format(inputs[0],total[4])  }}</td>
+                              <td class="ar" scope="col">{{ "{}{:,}".format(inputs[0],total[5])  }}</td>
+                              <td scope="col">{{ "{}{:,}".format(inputs[0],total[6])  }}</td>
+
+                          </tr>
+  
+
+
+                  </tbody>
+              </table>
+
+            </div>
+
+            <div class="table table-bordered border-0 custom_table_style" >
+
+              <table class="table center shadow bold" id="table0004" style="">
+
+    
+
+                  <tbody>
+
+                          <tr>
+
+                            <td  class=""  scope="col">Max. Salary/Month</td>
+                            <td  class="" scope="col">{{ "{}{:,}".format(inputs[0],avg_to_min[1])  }}</td>
+                    
+                            <td scope="col">Avg to Min</td>
+                            <td scope="col">{{avg_to_min[0]}}</td>
+      
+
+
+                        </tr>
+
+
+                  </tbody>
+              </table>
+
+            </div>
+
+        
+        </div>
+     
+      </div>
+      
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="{{url_for('static', filename='javascript/index_js.js')}}"></script>
+</body>
+</html>
